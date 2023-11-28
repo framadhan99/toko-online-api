@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProdukController;
+use App\Http\Middleware\ApiAuthMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +21,13 @@ use App\Http\Controllers\UserController;
 //     return $request->user();
 // });
 
-Route::post('/users', [UserController::class, 'register']);
+Route::post('/users/register', [UserController::class, 'register']);
+Route::post('/users/login', [UserController::class, 'login']);
+
+
+Route::middleware(ApiAuthMiddleware::class)->group(function () {
+
+Route::post('/produk/create', [ProdukController::class, 'create']);
+
+
+});
