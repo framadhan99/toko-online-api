@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProdukUpdateRequest;
+use App\Http\Resources\ProdukCollection;
 use App\Models\Produk;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -104,5 +106,29 @@ class ProdukController extends Controller
             'data'=> true,
             'message' => 'berhasil di hapus'
         ]);
+    }
+
+    public function search(Request $request) : ProdukCollection
+    {
+        $user = Auth::user();
+        $page = $request->input('page', 1);
+        $size = $request->input('size', 10);
+
+        $produk = Produk::query()->where('user_id', $user->id);
+        $produk = $produk->where(function(Builder $builder) use ($request){
+            $nama_produk = $request->input('nama_produk');
+            if($nama_produk){
+                $builder->where('nama_produk', 'like', '%'.$nama_produk.'%');
+            }
+
+            $harga = $request->input('harga');
+            if($harga){
+                $builder->where('harga', 'like', '%'.$harga.'%');
+            }
+        });
+
+        $produk = $produk->paginate(perPage:$size, page: $page);
+
+        return new ProdukCollection($produk);
     }
 }
