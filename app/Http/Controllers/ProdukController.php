@@ -66,4 +66,21 @@ class ProdukController extends Controller
 
         return new ProdukResource($produk);
     }
+
+    public function show($id) : ProdukResource
+    {
+        $user = Auth::user();
+        $produk = Produk::where('id', $id)->where('user_id', $user->id)->first();
+        if (!$produk) {
+            throw new HttpResponseException(response()->json([
+                'errors' => [
+                    "message" => [
+                        "not found"
+                    ]
+                ]
+            ])->setStatusCode(404));
+        }
+
+        return new ProdukResource($produk);
+    }
 }
