@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProdukUpdateRequest;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -43,6 +44,26 @@ class ProdukController extends Controller
             'message' => "success",
             'data'=> $produk,
         ]);
+    }
 
+    public function update(ProdukUpdateRequest $request, $id) : ProdukResource
+    {
+        $user = Auth::user();
+        $produk = Produk::where('id', $id)->where('user_id', $user->id)->first();
+        if (!$produk) {
+            throw new HttpResponseException(response()->json([
+                'errors' => [
+                    "message" => [
+                        "not found"
+                    ]
+                ]
+            ])->setStatusCode(404));
+        }
+
+        $data = $request->validated();
+        $produk->fill($data);
+        $produk->update();
+
+        return new ProdukResource($produk);
     }
 }

@@ -29,6 +29,7 @@ Route::middleware(ApiAuthMiddleware::class)->group(function () {
 
 Route::post('/produk/create', [ProdukController::class, 'create']);
 Route::get('/produk/list', [ProdukController::class, 'list']);
+Route::post('/produk/update/{id}', [ProdukController::class, 'update']);
 
 
 });
