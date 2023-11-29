@@ -83,4 +83,26 @@ class ProdukController extends Controller
 
         return new ProdukResource($produk);
     }
+
+    public function delete($id) : JsonResponse
+    {
+        $user = Auth::user();
+        $produk = Produk::where('id', $id)->where('user_id', $user->id)->first();
+        if (!$produk) {
+            throw new HttpResponseException(response()->json([
+                'errors' => [
+                    "message" => [
+                        "not found"
+                    ]
+                ]
+            ])->setStatusCode(404));
+        }
+
+        $produk->delete();
+
+        return response()->json([
+            'data'=> true,
+            'message' => 'berhasil di hapus'
+        ]);
+    }
 }
