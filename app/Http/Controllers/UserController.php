@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserLoginResource;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserLoginRequest;
+use App\Http\Resources\UserLoginResource;
 use App\Http\Requests\UserRegisterRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
@@ -57,5 +58,16 @@ class UserController extends Controller
         $user->save();
 
         return new UserLoginResource($user);
+    }
+
+    public function logout(Request $request) : JsonResponse
+    {
+        $user = Auth::user();
+        $user->token = null;
+        $user->save();
+
+        return response()->json([
+            'message'=>'berhasil logout'
+        ])->setStatusCode(200);
     }
 }

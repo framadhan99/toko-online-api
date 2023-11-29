@@ -32,4 +32,6 @@ Route::get('/produk/list', [ProdukController::class, 'list']);
 Route::get('/produk/{id}', [ProdukController::class, 'show']);
 Route::post('/produk/update/{id}', [ProdukController::class, 'update']);
 Route::post('/produk/delete/{id}', [ProdukController::class, 'delete']);
+
+Route::delete('users/logout', [UserController::class, 'logout']);
 });
