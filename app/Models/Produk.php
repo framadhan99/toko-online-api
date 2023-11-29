@@ -18,8 +18,8 @@ class Produk extends Model
         'harga'
     ];
 
-    // public function user():BelongsTo
-    // {
-    //     return $this->belongsTo(Produk::class, "user_id", "id");
-    // }
+    public function user():BelongsTo
+    {
+        return $this->belongsTo(Produk::class, "user_id", "id");
+    }
 }

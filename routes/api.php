@@ -28,6 +28,7 @@ Route::post('/users/login', [UserController::class, 'login']);
 Route::middleware(ApiAuthMiddleware::class)->group(function () {
 
 Route::post('/produk/create', [ProdukController::class, 'create']);
+Route::get('/produk/list', [ProdukController::class, 'list']);
 
 
 });

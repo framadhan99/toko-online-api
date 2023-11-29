@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ProdukResource;
 use App\Http\Requests\ProdukCreateRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ProdukController extends Controller
 {
@@ -21,5 +23,26 @@ class ProdukController extends Controller
 
         return new ProdukResource($produk);
         
+    }
+
+    public function list() : JsonResponse
+    {
+        $user = Auth::user();
+        $produk = Produk::where('user_id', $user->id)->get();
+        if (!$produk) {
+            throw new HttpResponseException(response()->json([
+                'errors' => [
+                    "message" => [
+                        "not found"
+                    ]
+                ]
+            ])->setStatusCode(404));
+        }
+
+        return response()->json([
+            'message' => "success",
+            'data'=> $produk,
+        ]);
+
     }
 }
